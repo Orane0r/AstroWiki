@@ -5,7 +5,8 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/content',
     '@nuxt/hints',
-    '@nuxt/test-utils'
+    '@nuxt/test-utils',
+    '@nuxthub/core'
   ],
 
   devtools: {
@@ -19,6 +20,16 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2025-01-15',
+
+  nitro: {
+    experimental: {
+      tasks: true
+    }
+  },
+
+  hub: {
+    db: 'sqlite'
+  },
 
   eslint: {
     config: {
