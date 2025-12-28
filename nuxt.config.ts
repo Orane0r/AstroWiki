@@ -15,6 +15,10 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  runtimeConfig: {
+    solarSystemApiToken: process.env.SOLAR_SYSTEM_API_TOKEN
+  },
+
   routeRules: {
     '/': { prerender: true }
   },

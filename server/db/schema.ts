@@ -4,7 +4,7 @@ export const bodies = sqliteTable('bodies', {
   id: int().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   type: text({
-    enum: ['Planet', 'Moon', 'Star', 'Asteroid', 'Comet', 'Dwarf  planet']
+    enum: ['Planet', 'Moon', 'Star', 'Asteroid', 'Comet', 'Dwarf planet']
   }).notNull(),
   // km
   meanRadius: int().notNull(),
@@ -18,7 +18,7 @@ export const bodies = sqliteTable('bodies', {
   density: real().notNull(),
   gravity: real().notNull(),
   // K
-  averageTemperatureK: int().notNull(),
+  averageTemperature: int().notNull(),
   // days
   sideralOrbit: real().notNull(),
   // hours
