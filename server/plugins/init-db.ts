@@ -1,15 +1,13 @@
-import { STORAGE_BASE, STORAGE_KEYS } from '../constants/storage'
-
+import { bodies } from 'hub:db:schema'
 import { consola } from 'consola'
 import { seedDatabase } from '../db/seed'
+import { sql } from 'drizzle-orm/sql'
 
 export default defineNitroPlugin(async () => {
-  const storage = useStorage(STORAGE_BASE)
-  if (await storage.getItem<boolean>(STORAGE_KEYS.dbInitialized)) {
+  const result = await db.select({ count: sql<number>`count(*)` }).from(bodies)
+  if (result[0].count > 0) {
     consola.info('Database already initialized, skipping seeding.')
-    return
+  } else {
+    await seedDatabase()
   }
-
-  await seedDatabase()
-  await storage.setItem(STORAGE_KEYS.dbInitialized, true)
 })
