@@ -26,11 +26,10 @@ export function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyApi): NewBody {
     sideralOrbit: body.sideralOrbit,
     sideralRotation: body.sideralRotation,
     alternativeName: body.alternativeName || null,
-    // TODO marche pas
-    // discoveryDate: body.discoveryDate
-    //   ? parse(body.discoveryDate, 'dd/MM/yyyy', new Date())
-    //   : null,
-    discoveryDate: null,
+    discoveryYear:
+      body.discoveryDate.length === 0
+        ? null
+        : Number.parseInt(body.discoveryDate.slice(-4)),
     discoveredBy: body.discoveredBy || null,
     imageUrl: null
   }

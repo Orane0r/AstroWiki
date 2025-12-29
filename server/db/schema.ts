@@ -24,7 +24,7 @@ export const bodies = sqliteTable('bodies', {
   // hours
   sideralRotation: real().notNull(),
   alternativeName: text(),
-  discoveryDate: int({ mode: 'timestamp' }),
+  discoveryYear: int(),
   discoveredBy: text(),
   imageUrl: text()
 })
