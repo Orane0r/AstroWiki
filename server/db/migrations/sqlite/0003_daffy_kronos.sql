@@ -1,1 +1,0 @@
-ALTER TABLE `bodies` RENAME COLUMN "discoveryDate" TO "discoveryYear";

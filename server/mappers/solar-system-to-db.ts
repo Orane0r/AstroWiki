@@ -1,6 +1,5 @@
 import { BodyType, type SolarSystemBodyApi } from '../types/solar-system'
 import type { NewBody } from '../../shared/types/db'
-import { parse } from 'date-fns'
 
 const BODY_TYPE_MAP: Record<BodyType, NewBody['type']> = {
   [BodyType.Planet]: 'Planet',

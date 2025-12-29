@@ -9,11 +9,11 @@ CREATE TABLE `bodies` (
 	`volumeExponent` integer,
 	`density` real NOT NULL,
 	`gravity` real NOT NULL,
-	`averageTemperatureK` integer NOT NULL,
+	`averageTemperature` integer NOT NULL,
 	`sideralOrbit` real NOT NULL,
 	`sideralRotation` real NOT NULL,
 	`alternativeName` text,
-	`discoveryDate` integer,
+	`discoveryYear` integer,
 	`discoveredBy` text,
 	`imageUrl` text
 );
@@ -24,5 +24,3 @@ CREATE TABLE `body_relations` (
 	FOREIGN KEY (`parent_id`) REFERENCES `bodies`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`child_id`) REFERENCES `bodies`(`id`) ON UPDATE no action ON DELETE no action
 );
---> statement-breakpoint
-DROP TABLE `planets`;
