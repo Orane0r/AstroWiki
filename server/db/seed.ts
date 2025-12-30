@@ -53,5 +53,5 @@ export async function seedDatabase() {
     }
   }
 
-  consola.success('Database seeded successfully !')
+  consola.success('Database seeded successfully.')
 }
