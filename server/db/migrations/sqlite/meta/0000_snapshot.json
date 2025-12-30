@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "9b6ec1d0-7bd2-4a72-8ff9-da3e75ee3462",
+  "id": "ca470d3a-a221-4f89-8263-408d5dd42cf8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "bodies": {
@@ -136,16 +136,16 @@
     "body_relations": {
       "name": "body_relations",
       "columns": {
-        "parent_id": {
-          "name": "parent_id",
-          "type": "text",
+        "parentId": {
+          "name": "parentId",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "child_id": {
-          "name": "child_id",
-          "type": "text",
+        "childId": {
+          "name": "childId",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -153,12 +153,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "body_relations_parent_id_bodies_id_fk": {
-          "name": "body_relations_parent_id_bodies_id_fk",
+        "body_relations_parentId_bodies_id_fk": {
+          "name": "body_relations_parentId_bodies_id_fk",
           "tableFrom": "body_relations",
           "tableTo": "bodies",
           "columnsFrom": [
-            "parent_id"
+            "parentId"
           ],
           "columnsTo": [
             "id"
@@ -166,12 +166,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "body_relations_child_id_bodies_id_fk": {
-          "name": "body_relations_child_id_bodies_id_fk",
+        "body_relations_childId_bodies_id_fk": {
+          "name": "body_relations_childId_bodies_id_fk",
           "tableFrom": "body_relations",
           "tableTo": "bodies",
           "columnsFrom": [
-            "child_id"
+            "childId"
           ],
           "columnsTo": [
             "id"

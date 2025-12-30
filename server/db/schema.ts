@@ -1,4 +1,4 @@
-import { sqliteTable, text, int, real } from 'drizzle-orm/sqlite-core'
+import { int, real, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
 export const bodies = sqliteTable('bodies', {
   id: int().primaryKey({ autoIncrement: true }),
@@ -30,10 +30,10 @@ export const bodies = sqliteTable('bodies', {
 })
 
 export const bodyRelations = sqliteTable('body_relations', {
-  parentId: text('parent_id')
+  parentId: int()
     .notNull()
     .references(() => bodies.id),
-  childId: text('child_id')
+  childId: int()
     .notNull()
     .references(() => bodies.id)
 })

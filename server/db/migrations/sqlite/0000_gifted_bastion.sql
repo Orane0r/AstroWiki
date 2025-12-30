@@ -19,8 +19,8 @@ CREATE TABLE `bodies` (
 );
 --> statement-breakpoint
 CREATE TABLE `body_relations` (
-	`parent_id` text NOT NULL,
-	`child_id` text NOT NULL,
-	FOREIGN KEY (`parent_id`) REFERENCES `bodies`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`child_id`) REFERENCES `bodies`(`id`) ON UPDATE no action ON DELETE no action
+	`parentId` integer NOT NULL,
+	`childId` integer NOT NULL,
+	FOREIGN KEY (`parentId`) REFERENCES `bodies`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`childId`) REFERENCES `bodies`(`id`) ON UPDATE no action ON DELETE no action
 );
