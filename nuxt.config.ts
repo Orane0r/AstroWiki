@@ -10,10 +10,18 @@ export default defineNuxtConfig({
   ],
 
   devtools: {
-    enabled: true
+    enabled: true,
+
+    timeline: {
+      enabled: true
+    }
   },
 
   css: ['~/assets/css/main.css'],
+
+  runtimeConfig: {
+    solarSystemApiToken: process.env.SOLAR_SYSTEM_API_TOKEN
+  },
 
   routeRules: {
     '/': { prerender: true }

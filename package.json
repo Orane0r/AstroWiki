@@ -5,6 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "dev:debug": "nuxt dev --inspect",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
@@ -22,6 +23,7 @@
     "better-sqlite3": "^12.5.0",
     "drizzle-kit": "^0.31.8",
     "drizzle-orm": "^0.45.1",
+    "lodash": "^4.17.21",
     "nuxt": "^4.2.2"
   },
   "devDependencies": {
