@@ -10,7 +10,7 @@ const BODY_TYPE_MAP: Record<BodyType, NewBody['type']> = {
   [BodyType.Star]: 'Star'
 }
 
-export function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyApi): NewBody {
+export function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyApi, imageUrl: string | null): NewBody {
   return {
     name: body.englishName,
     type: BODY_TYPE_MAP[body.bodyType],
@@ -30,6 +30,6 @@ export function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyApi): NewBody {
         ? null
         : Number.parseInt(body.discoveryDate.slice(-4)),
     discoveredBy: body.discoveredBy || null,
-    imageUrl: null
+    imageUrl: imageUrl
   }
 }
