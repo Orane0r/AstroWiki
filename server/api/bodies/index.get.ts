@@ -1,19 +1,12 @@
+import { BodyType } from './../../../shared/enums/body-type'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
-  // Validation du paramètre
   const validationSchema = z.object({
-    type: z.enum([
-      'Planet',
-      'Moon',
-      'Star',
-      'Asteroid',
-      'Comet',
-      'Dwarf planet'
-    ])
+    type: z.nativeEnum(BodyType)
   })
 
   const { type } = validationSchema.parse(query)
