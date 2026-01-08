@@ -3,8 +3,14 @@ import { consola } from 'consola'
 import { seedDatabase } from '../db/seed'
 import { sql } from 'drizzle-orm/sql'
 
+let hasChecked = false
+
 export default defineNitroPlugin(async () => {
-  if (import.meta.dev) return
+  if (hasChecked || import.meta.dev) {
+    return
+  }
+
+  hasChecked = true
 
   const result = await db.select({ count: sql<number>`count(*)` }).from(bodies)
   if (result[0].count > 0) {
