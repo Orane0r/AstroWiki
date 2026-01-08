@@ -1,5 +1,14 @@
+<script setup lang="ts">
+const { data } = await useFetch('/api/bodies', {
+  query: {
+    type: 'Planet'
+  }
+})
+</script>
+
 <template>
   <div>
+    {{ data }}
     <UPageHero
       title="Nuxt Starter Template"
       description="A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours."
