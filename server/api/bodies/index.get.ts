@@ -1,20 +1,43 @@
+import { and, eq, inArray } from 'drizzle-orm'
+
 import { BodyType } from './../../../shared/enums/body-type'
-import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
   const validationSchema = z.object({
-    type: z.nativeEnum(BodyType)
+    type: z.nativeEnum(BodyType).optional(),
+    parentId: z.coerce.number().int().positive().optional()
   })
 
-  const { type } = validationSchema.parse(query)
+  const { type, parentId } = validationSchema.parse(query)
 
-  const result = await db
+  if (!parentId) {
+    return await db
+      .select()
+      .from(schema.bodies)
+      .where(type ? eq(schema.bodies.type, type) : undefined)
+  }
+
+  const childrenIds = await db
+    .select({ id: schema.bodyRelations.childId })
+    .from(schema.bodyRelations)
+    .where(eq(schema.bodyRelations.parentId, parentId))
+
+  if (childrenIds.length === 0) {
+    return []
+  }
+
+  const ids = childrenIds.map(r => r.id)
+
+  return await db
     .select()
     .from(schema.bodies)
-    .where(eq(schema.bodies.type, type))
-
-  return result
+    .where(
+      and(
+        inArray(schema.bodies.id, ids),
+        type ? eq(schema.bodies.type, type) : undefined
+      )
+    )
 })
