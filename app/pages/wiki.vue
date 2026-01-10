@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { TreeItem } from '@nuxt/ui'
 
-// TODO mettre l'url dans un fichier des constantes ?
 const { data: planets } = await useFetch('/api/bodies', {
   query: {
     type: 'Planet'
@@ -36,6 +35,6 @@ const items: TreeItem[] = planets.value!
   <UTree
     virtualize
     :items="items"
-    class="h-80"
+    class="w-60"
   />
 </template>
