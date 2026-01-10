@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TreeItem } from '@nuxt/ui'
 
+// TODO mettre l'url dans un fichier des constantes ?
 const { data: planets } = await useFetch('/api/bodies', {
   query: {
     type: 'Planet'
@@ -11,19 +12,22 @@ const items: TreeItem[] = planets.value!
   .map(planet => ({
     label: planet.name,
     icon: 'fluent-emoji-flat:ringed-planet',
+    children: [],
     onToggle: async (event) => {
-      console.log(event.detail.isExpanded)
-      const { data: children } = await useFetch('/api/bodies', {
-        query: {
-          parentId: planet.id
-        }
-      })
-      console.log(children.value)
+      if (!event.detail.isExpanded && event.detail.value?.children?.length === 0) {
+        const children = await $fetch('/api/bodies', {
+          query: {
+            parentId: planet.id
+          }
+        })
 
-      return children.value!.map(child => ({
-        label: child.name,
-        icon: 'fluent-emoji-flat:first-quarter-moon'
-      }))
+        if (event.detail.value) {
+          event.detail.value.children = children!.map(child => ({
+            label: child.name,
+            icon: 'fluent-emoji-flat:new-moon'
+          }))
+        }
+      }
     }
   }))
 </script>
