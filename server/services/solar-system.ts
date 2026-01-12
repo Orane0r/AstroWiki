@@ -15,6 +15,12 @@ export async function fetchSolarSystemBodies(): Promise<SolarSystemBodyApi[]> {
     throw new Error('Failed to fetch solar system bodies.')
   }
 
-  const json = await result.json()
-  return json.bodies as SolarSystemBodyApi[]
+  const text = await result.text()
+
+  // Because the API sometimes returns invalid JSON with control characters..
+  // eslint-disable-next-line no-control-regex
+  const json = text.replaceAll(/[\u0000-\u001F\u007F-\u009F]/g, '')
+    .replaceAll(/\s+/g, ' ')
+    .trim()
+  return JSON.parse(json).bodies as SolarSystemBodyApi[]
 }

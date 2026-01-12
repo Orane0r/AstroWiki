@@ -1,4 +1,4 @@
-import { and, eq, inArray } from 'drizzle-orm'
+import { and, desc, eq, inArray } from 'drizzle-orm'
 
 import { BodyType } from './../../../shared/enums/body-type'
 import { z } from 'zod'
@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
       .select()
       .from(schema.bodies)
       .where(type ? eq(schema.bodies.type, type) : undefined)
+      .orderBy(schema.bodies.semimajorAxis)
   }
 
   const childrenIds = await db
@@ -40,4 +41,5 @@ export default defineEventHandler(async (event) => {
         type ? eq(schema.bodies.type, type) : undefined
       )
     )
+    .orderBy(desc(schema.bodies.meanRadius))
 })

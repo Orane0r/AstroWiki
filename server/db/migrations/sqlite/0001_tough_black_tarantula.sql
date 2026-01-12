@@ -1,0 +1,1 @@
+ALTER TABLE `bodies` ADD `semimajorAxis` real DEFAULT 0 NOT NULL;

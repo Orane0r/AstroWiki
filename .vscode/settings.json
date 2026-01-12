@@ -11,5 +11,8 @@
     "typescript",
     "typescriptreact",
     "vue"
+  ],
+  "cSpell.words": [
+    "semimajor"
   ]
 }
