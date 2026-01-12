@@ -10,23 +10,3 @@ import type { TreeItem } from '@nuxt/ui'
 export interface TreeItemWithLoading extends TreeItem {
   isLoading?: boolean
 }
-
-/**
- * Event emitted when a `TreeItem` is toggled.
- */
-export type TreeToggleEvent<T> = CustomEvent<{
-  originalEvent: PointerEvent | KeyboardEvent
-  value?: T
-  isExpanded: boolean
-  isSelected: boolean
-}>
-
-/**
- * Event emitted when a `TreeItem` is selected.
- */
-export type TreeSelectEvent<T> = CustomEvent<{
-  originalEvent: PointerEvent | KeyboardEvent
-  value?: T
-  isExpanded: boolean
-  isSelected: boolean
-}>

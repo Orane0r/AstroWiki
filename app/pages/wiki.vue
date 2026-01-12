@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { TreeItemWithLoading, TreeToggleEvent } from '~/types/tree'
+import type { TreeItemWithLoading } from '~/types/tree'
 import { BodyType } from '~~/shared/enums/body-type'
+import type { TreeProps } from '#ui/types'
 
 const { data: planets } = await useFetch('/api/bodies', {
   query: {
@@ -13,10 +14,10 @@ const { data: planets } = await useFetch('/api/bodies', {
  * @param event Toggle event.
  * @param planetId Id of the planet.
  */
-async function onTogglePlanet(
-  event: TreeToggleEvent<TreeItemWithLoading>,
-  planetId: number
-): Promise<void> {
+const onTogglePlanet: TreeProps<TreeItemWithLoading[]>['onToggle'] = async (
+  event,
+  item
+): Promise<void> => {
   if (!event.detail.isExpanded && event.detail.value?.children?.length === 0) {
     if (event.detail.value) {
       event.detail.value.isLoading = true
@@ -25,7 +26,7 @@ async function onTogglePlanet(
     const children = await $fetch('/api/bodies', {
       query: {
         type: BodyType.Moon,
-        parentId: planetId
+        parentId: item.id
       }
     })
 
@@ -41,19 +42,20 @@ async function onTogglePlanet(
 
 const items: Ref<TreeItemWithLoading[]> = ref(planets.value!
   .map(planet => ({
+    id: planet.id,
     label: planet.name,
     icon: 'fluent-emoji-flat:ringed-planet',
     isLoading: false,
-    children: [],
-    onToggle: event => onTogglePlanet(event, planet.id)
+    children: []
   })))
 </script>
 
 <template>
   <UTree
+    class="w-60"
     virtualize
     :items="items"
-    class="w-60"
+    @toggle="onTogglePlanet"
   >
     <template #item-trailing="{ item, expanded }">
       <UIcon
