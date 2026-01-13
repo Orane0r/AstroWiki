@@ -1,4 +1,6 @@
-<script setup>
+<script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui'
+
 useHead({
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
@@ -23,6 +25,37 @@ useSeoMeta({
   twitterImage: 'https://ui.nuxt.com/assets/templates/nuxt/starter-light.png',
   twitterCard: 'summary_large_image'
 })
+
+const items: Ref<NavigationMenuItem[]> = ref([
+  {
+    label: 'Wiki',
+    icon: 'i-lucide-book-open',
+    children: [
+      {
+        label: 'Solar system',
+        to: '/wiki/'
+      },
+      {
+        label: 'Stars',
+        to: '/'
+      },
+      {
+        label: 'Galaxies',
+        to: '/'
+      }
+    ]
+  },
+  {
+    label: '3D View',
+    icon: 'i-lucide-box',
+    to: '/'
+  },
+  {
+    label: 'Compare',
+    icon: 'lucide:arrow-right-left',
+    to: '/'
+  }
+])
 </script>
 
 <template>
@@ -33,7 +66,7 @@ useSeoMeta({
           <AppLogo class="w-auto h-6 shrink-0" />
         </NuxtLink>
 
-        <TemplateMenu />
+        <UNavigationMenu :items="items" />
       </template>
 
       <template #right>
