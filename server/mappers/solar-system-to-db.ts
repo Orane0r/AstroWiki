@@ -24,6 +24,7 @@ export function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyApi, imageUrl: 
     averageTemperature: body.avgTemp,
     sideralOrbit: body.sideralOrbit,
     sideralRotation: body.sideralRotation,
+    semimajorAxis: body.semimajorAxis,
     alternativeName: body.alternativeName || null,
     discoveryYear:
       body.discoveryDate.length === 0

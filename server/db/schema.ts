@@ -23,6 +23,8 @@ export const bodies = sqliteTable('bodies', {
   sideralOrbit: real().notNull(),
   // hours
   sideralRotation: real().notNull(),
+  // km
+  semimajorAxis: real().notNull().default(0),
   alternativeName: text(),
   discoveryYear: int(),
   discoveredBy: text(),
