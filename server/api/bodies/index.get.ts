@@ -7,17 +7,18 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
   const validationSchema = z.object({
+    id: z.coerce.number().int().positive().optional(),
     type: z.nativeEnum(BodyType).optional(),
     parentId: z.coerce.number().int().positive().optional()
   })
 
-  const { type, parentId } = validationSchema.parse(query)
+  const { id, type, parentId } = validationSchema.parse(query)
 
   if (!parentId) {
     return await db
       .select()
       .from(schema.bodies)
-      .where(type ? eq(schema.bodies.type, type) : undefined)
+      .where(and(id ? eq(schema.bodies.id, id) : undefined, type ? eq(schema.bodies.type, type) : undefined))
       .orderBy(schema.bodies.semimajorAxis)
   }
 

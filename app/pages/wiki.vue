@@ -2,6 +2,7 @@
 import type { TreeItemWithLoading } from '~/types/tree'
 import { BodyType } from '~~/shared/enums/body-type'
 import type { TreeProps } from '#ui/types'
+import { asyncComputed } from '@vueuse/core'
 
 const { data: planets } = await useFetch('/api/bodies', {
   query: {
@@ -48,24 +49,57 @@ const items: Ref<TreeItemWithLoading[]> = ref(planets.value!
     isLoading: false,
     children: []
   })))
+
+const selectedPlanet = ref()
+
+// FIXME
+const getImageFromId = asyncComputed(async (): Promise<string | null> => {
+  if (selectedPlanet.value) {
+    const { data: body } = await useFetch('/api/bodies', {
+      query: {
+        id: selectedPlanet.value?.id
+      }
+    })
+
+    // TODO faire en sorte de retourner un seul item lors d'une recherche par id
+    if (body.value) {
+      return body.value[0]?.imageUrl ?? null
+    }
+  }
+  return null
+})
 </script>
 
 <template>
-  <UTree
-    class="w-60"
-    virtualize
-    :items="items"
-    @toggle="onTogglePlanet"
-  >
-    <template #item-trailing="{ item, expanded }">
-      <UIcon
-        v-if="item.isLoading"
-        name="line-md:loading-twotone-loop"
-      />
-      <UIcon
-        v-else
-        :name="expanded ? 'i-heroicons-chevron-down' : 'i-heroicons-chevron-right'"
-      />
+  <UPage>
+    <template #left>
+      <UPageAside>
+        <UTree
+          v-model="selectedPlanet"
+          virtualize
+          :items="items"
+          @toggle="onTogglePlanet"
+        >
+          <template #item-trailing="{ item, expanded }">
+            <UIcon
+              v-if="item.isLoading"
+              name="line-md:loading-twotone-loop"
+            />
+            <UIcon
+              v-else
+              :name="expanded ? 'i-heroicons-chevron-down' : 'i-heroicons-chevron-right'"
+            />
+          </template>
+        </UTree>
+      </UPageAside>
     </template>
-  </UTree>
+
+    {{ selectedPlanet }}
+    <img
+      v-if="getImageFromId"
+      :src="getImageFromId"
+      alt=""
+      class="h-60 object-cover mt-4 rounded-md"
+    >
+  </UPage>
 </template>
