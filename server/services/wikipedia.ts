@@ -3,7 +3,10 @@ import type { WikipediaPageSummaryApi } from '../types/wikipedia-page-summary'
 
 const BASE_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary'
 
-export async function fetchWikipediaImageUrl(bodyName: string, bodyType: BodyType): Promise<string | null> {
+export async function fetchWikipediaImageUrl(
+  bodyName: string,
+  bodyType: BodyType
+): Promise<string | null> {
   const searchVariants = [
     bodyName,
     `${bodyName} (${bodyType.toLowerCase()})`,
@@ -11,16 +14,22 @@ export async function fetchWikipediaImageUrl(bodyName: string, bodyType: BodyTyp
   ]
 
   for (const variant of searchVariants) {
-    try {
-      const response = await fetch(`${BASE_URL}/${variant}`)
+    if (!bodyName.startsWith('S/')) {
+      try {
+        const response = await fetch(`${BASE_URL}/${encodeURIComponent(variant)}`, {
+          headers: {
+            'User-Agent': 'AstroWiki/1.0'
+          }
+        })
 
-      const json = await response.json() as WikipediaPageSummaryApi
+        const json = await response.json() as WikipediaPageSummaryApi
 
-      if (json.originalimage?.source) {
-        return json.originalimage.source
+        if (json.originalimage?.source) {
+          return json.originalimage.source
+        }
+      } catch {
+        continue
       }
-    } catch {
-      continue
     }
   }
 
