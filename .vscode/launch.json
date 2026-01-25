@@ -18,7 +18,12 @@
       ],
       "sourceMaps": true, 
       "smartStep": true,
-      "trace": true
+      "trace": true,
+      "serverReadyAction": {
+        "pattern": "Local:.*http://localhost:([0-9]+)",
+        "uriFormat": "http://localhost:%s",
+        "action": "openExternally"
+      }
     }
   ]
 }

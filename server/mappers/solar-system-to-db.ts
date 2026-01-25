@@ -11,25 +11,30 @@ const BODY_TYPE_MAP: Record<BodyType, NewBody['type']> = {
 }
 
 export function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyApi, imageUrl: string | null): NewBody {
+  const safeNumber = (value: unknown, defaultValue: number = 0): number => {
+    const num = Number(value)
+    return Number.isNaN(num) ? defaultValue : num
+  }
+
   return {
     name: body.englishName,
     type: BODY_TYPE_MAP[body.bodyType],
-    meanRadius: body.meanRadius,
-    massValue: body.mass ? body.mass.massValue : null,
-    massExponent: body.mass ? body.mass.massExponent : null,
-    volumeValue: body.vol ? body.vol.volValue : null,
-    volumeExponent: body.vol ? body.vol.volExponent : null,
-    density: body.density,
-    gravity: body.gravity,
-    averageTemperature: body.avgTemp,
-    sideralOrbit: body.sideralOrbit,
-    sideralRotation: body.sideralRotation,
-    semimajorAxis: body.semimajorAxis,
+    meanRadius: safeNumber(body.meanRadius),
+    massValue: body.mass?.massValue ?? null,
+    massExponent: body.mass?.massExponent ?? null,
+    volumeValue: body.vol?.volValue ?? null,
+    volumeExponent: body.vol?.volExponent ?? null,
+    density: safeNumber(body.density),
+    gravity: safeNumber(body.gravity),
+    averageTemperature: safeNumber(body.avgTemp),
+    sideralOrbit: safeNumber(body.sideralOrbit),
+    sideralRotation: safeNumber(body.sideralRotation),
+    semimajorAxis: safeNumber(body.semimajorAxis),
     alternativeName: body.alternativeName || null,
     discoveryYear:
       body.discoveryDate.length === 0
         ? null
-        : Number.parseInt(body.discoveryDate.slice(-4)),
+        : safeNumber(Number.parseInt(body.discoveryDate.slice(-4))),
     discoveredBy: body.discoveredBy || null,
     imageUrl: imageUrl
   }

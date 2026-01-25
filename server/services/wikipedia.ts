@@ -8,9 +8,9 @@ export async function fetchWikipediaImageUrl(
   bodyType: BodyType
 ): Promise<string | null> {
   const searchVariants = [
-    bodyName,
     `${bodyName} (${bodyType.toLowerCase()})`,
-    `${bodyType} ${bodyName}`
+    `${bodyType} ${bodyName}`,
+    bodyName
   ]
 
   for (const variant of searchVariants) {
