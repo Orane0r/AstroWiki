@@ -17,6 +17,7 @@
     "@libsql/client": "^0.15.15",
     "@nuxt/content": "^3.10.0",
     "@nuxt/hints": "1.0.0-alpha.5",
+    "@nuxt/image": "2.0.0",
     "@nuxt/test-utils": "^3.21.0",
     "@nuxt/ui": "^4.3.0",
     "@nuxthub/core": "0.10.4",

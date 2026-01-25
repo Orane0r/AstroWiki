@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@nuxt/hints',
     '@nuxt/test-utils',
-    '@nuxthub/core'
+    '@nuxthub/core',
+    '@nuxt/image'
   ],
 
   devtools: {
