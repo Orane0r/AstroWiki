@@ -2,12 +2,18 @@
 import type { SelectItem } from '@nuxt/ui'
 import { BodyType } from '~~/shared/enums/body-type'
 
-const selectedBodyType = ref<BodyType>(BodyType.Planet)
+const solarSystemStore = useSolarSystemStore()
+const { bodies, selectedBodyType } = storeToRefs(solarSystemStore)
 
-const { data: planets, pending } = await useFetch('/api/bodies', {
+const { data: planets, pending } = await useFetch<CelestialBody[]>('/api/bodies', {
   query: {
-    type: selectedBodyType.value
-  }
+    type: selectedBodyType
+  },
+  watch: [selectedBodyType]
+})
+
+watch(planets, (val) => {
+  solarSystemStore.bodies = val || []
 })
 
 const items: Ref<SelectItem[]> = ref(Object.values(BodyType))
@@ -17,13 +23,14 @@ const items: Ref<SelectItem[]> = ref(Object.values(BodyType))
   <UPage>
     <template #left>
       <UPageAside>
-        <div class="px-5">
+        <div class="px-5 grid grid-cols-1 gap-4">
           <div class="h3">
             Explore
           </div>
 
           <USelect
             v-model="selectedBodyType"
+            class="w-50"
             :items="items"
           />
         </div>
@@ -47,7 +54,7 @@ const items: Ref<SelectItem[]> = ref(Object.values(BodyType))
         class="column-1 md:columns-3 lg:columns-4 xl:columns-5 gap-5"
       >
         <UPageCard
-          v-for="(planet, index) in planets"
+          v-for="(planet, index) in bodies"
           :key="index"
           variant="subtle"
           :title="planet.name"
