@@ -3,7 +3,7 @@ import type { SelectItem } from '@nuxt/ui'
 import { BodyType } from '~~/shared/enums/body-type'
 
 const solarSystemStore = useSolarSystemStore()
-const { bodies, selectedBodyType } = storeToRefs(solarSystemStore)
+const { bodies, selectedRange, selectedBodyType } = storeToRefs(solarSystemStore)
 
 const { data: planets, pending } = await useFetch<CelestialBody[]>('/api/bodies', {
   query: {
@@ -14,9 +14,9 @@ const { data: planets, pending } = await useFetch<CelestialBody[]>('/api/bodies'
 
 watch(planets, (val) => {
   solarSystemStore.bodies = val || []
-})
+}, { immediate: true })
 
-const items: Ref<SelectItem[]> = ref(Object.values(BodyType))
+const bodyTypes: Ref<SelectItem[]> = ref(Object.values(BodyType))
 </script>
 
 <template>
@@ -28,11 +28,20 @@ const items: Ref<SelectItem[]> = ref(Object.values(BodyType))
             Explore
           </div>
 
-          <USelect
-            v-model="selectedBodyType"
-            class="w-50"
-            :items="items"
-          />
+          <UFormField label="Range">
+            <USelect
+              v-model="selectedRange"
+              class="w-50"
+              :items="RANGES"
+            />
+          </UFormField>
+          <UFormField label="Type">
+            <USelect
+              v-model="selectedBodyType"
+              class="w-50"
+              :items="bodyTypes"
+            />
+          </UFormField>
         </div>
       </UPageAside>
     </template>
