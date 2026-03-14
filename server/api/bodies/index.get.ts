@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray } from 'drizzle-orm'
+import { and, desc, eq, inArray, isNotNull } from 'drizzle-orm'
 
 import { BodyType } from './../../../shared/enums/body-type'
 import { z } from 'zod'
@@ -9,16 +9,23 @@ export default defineEventHandler(async (event) => {
   const validationSchema = z.object({
     id: z.coerce.number().int().positive().optional(),
     type: z.nativeEnum(BodyType).optional(),
-    parentId: z.coerce.number().int().positive().optional()
+    parentId: z.coerce.number().int().positive().optional(),
+    hasImage: z.enum(['true', 'false']).transform(v => v === 'true').optional()
   })
 
-  const { id, type, parentId } = validationSchema.parse(query)
+  const { id, type, parentId, hasImage } = validationSchema.parse(query)
 
   if (!parentId) {
     return await db
       .select()
       .from(schema.bodies)
-      .where(and(id ? eq(schema.bodies.id, id) : undefined, type ? eq(schema.bodies.type, type) : undefined))
+      .where(
+        and(
+          id ? eq(schema.bodies.id, id) : undefined,
+          type ? eq(schema.bodies.type, type) : undefined,
+          hasImage ? isNotNull(schema.bodies.imageUrl) : undefined
+        )
+      )
       .orderBy(schema.bodies.semimajorAxis)
   }
 
