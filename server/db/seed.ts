@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { consola } from 'consola'
 import { fetchSolarSystemBodies } from '../services/solar-system'
 import { fetchWikipediaImageUrl } from '../services/wikipedia'
+import fs from 'node:fs'
 import { mapSolarSystemBodiesApiToDb } from '../mappers/solar-system-to-db'
 
 export async function seedDatabase() {
@@ -20,15 +21,18 @@ export async function seedDatabase() {
       parentIdApi: string
     }[] = []
 
-    const bodiesWithImages = await Promise.all(
-      bodies.map(async (body) => {
-        const imageUrl = await fetchWikipediaImageUrl(body.englishName, body.bodyType)
-          .catch(() => null)
-        return { body, imageUrl }
-      })
-    )
+    const wikipediaUrls = JSON.parse(
+      fs.readFileSync('./server/data/wikipedia.json', 'utf-8')
+    ) as { name: string, url: string }[]
 
-    for (const { body, imageUrl } of bodiesWithImages) {
+    for (const body of bodies) {
+      const url = _.find(wikipediaUrls, item => item.name === body.englishName)?.url
+
+      let imageUrl = null
+      if (url) {
+        imageUrl = await fetchWikipediaImageUrl(url)
+      }
+
       const result = await tx
         .insert(schema.bodies)
         .values(mapSolarSystemBodiesApiToDb(body, imageUrl))

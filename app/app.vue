@@ -49,11 +49,6 @@ const items: Ref<NavigationMenuItem[]> = ref([
     label: '3D View',
     icon: 'i-lucide-box',
     to: '/'
-  },
-  {
-    label: 'Compare',
-    icon: 'lucide:arrow-right-left',
-    to: '/'
   }
 ])
 </script>
