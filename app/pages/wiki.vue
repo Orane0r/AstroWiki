@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import type { SelectItem } from '@nuxt/ui'
+import { storeToRefs } from 'pinia'
+import { RANGES } from '~/utils/constants/options'
+import sortOrder from '~/utils/sort-order.ts'
 import { BodyType } from '~~/shared/enums/body-type'
+import { Sorting } from '~~/shared/enums/sorting'
 
 const solarSystemStore = useSolarSystemStore()
 const { bodies, selectedRange, selectedBodyType, isImagesOnly } = storeToRefs(solarSystemStore)
 
+const sortingDistance: Ref<Sorting> = ref(Sorting.Ascending)
+
 const { data: planets, pending } = await useFetch<CelestialBody[]>('/api/bodies', {
   query: {
     type: selectedBodyType,
-    hasImage: isImagesOnly
+    hasImage: isImagesOnly,
+    sortBy: sortingDistance.value ? 'distance' : null,
+    sortOrder: sortingDistance
   },
-  watch: [selectedBodyType, isImagesOnly]
+  watch: [selectedBodyType, isImagesOnly, sortingDistance]
 })
 
 watch(planets, (val) => {
@@ -18,6 +26,20 @@ watch(planets, (val) => {
 }, { immediate: true })
 
 const bodyTypes: Ref<SelectItem[]> = ref(Object.values(BodyType))
+
+function onClickSortDistance() {
+  sortingDistance.value = sortOrder(sortingDistance.value)
+}
+
+function getSortingIcon(sorting: Sorting) {
+  if (sorting === Sorting.Ascending) {
+    return 'i-lucide-arrow-up'
+  }
+
+  if (sorting === Sorting.Descending) {
+    return 'i-lucide-arrow-down'
+  }
+}
 </script>
 
 <template>
@@ -55,11 +77,14 @@ const bodyTypes: Ref<SelectItem[]> = ref(Object.values(BodyType))
             Sort
           </div>
 
-          <!-- TODO toggle avec une image oui/non -->
-
           <!-- TODO tri du plus petit au plus gros -->
           <!-- TODO tri du plus près au plus loin de son parent -->
           <!-- TODO tri du plus chaud au plus froid -->
+          <UButton
+            label="Distance"
+            :icon="getSortingIcon(sortingDistance)"
+            @click="onClickSortDistance()"
+          />
         </div>
       </UPageAside>
     </template>

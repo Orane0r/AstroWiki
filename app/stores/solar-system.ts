@@ -1,4 +1,5 @@
 import { BodyType } from '~~/shared/enums/body-type'
+import { RANGES } from '~/utils/constants/options'
 import { defineStore } from 'pinia'
 
 interface SolarSystemState {
