@@ -1,16 +1,20 @@
 import { and, asc, desc, eq, inArray, isNotNull } from 'drizzle-orm'
 
+import type { AnyColumn } from 'drizzle-orm'
 import { BodyType } from './../../../shared/enums/body-type'
+import { SORTS } from '~~/shared/constants/options'
 import { Sorting } from '~~/shared/enums/sorting'
 import { z } from 'zod'
 
-const SortField = z.enum(['distance'])
+const SortField = z.enum(SORTS as [string, ...string[]])
 const SortOrder = z.nativeEnum(Sorting)
 
 type SortField = z.infer<typeof SortField>
 
-const sortFieldMap: Record<SortField, typeof schema.bodies.semimajorAxis> = {
-  distance: schema.bodies.semimajorAxis
+const sortFieldMap: Record<SortField, AnyColumn> = {
+  Distance: schema.bodies.semimajorAxis,
+  Size: schema.bodies.meanRadius,
+  Temperature: schema.bodies.averageTemperature
 }
 
 export default defineEventHandler(async (event) => {
