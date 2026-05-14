@@ -7,21 +7,35 @@ import { BodyType } from '~~/shared/enums/body-type'
 import { Sorting } from '~~/shared/enums/sorting'
 
 const solarSystemStore = useSolarSystemStore()
-const { bodies, selectedRange, selectedBodyType, selectedSortBy, selectedSortOrder, isImagesOnly } = storeToRefs(solarSystemStore)
+const {
+  bodies,
+  selectedRange,
+  selectedBodyType,
+  selectedSortBy,
+  selectedSortOrder,
+  isImagesOnly
+} = storeToRefs(solarSystemStore)
 
-const { data: planets, pending } = await useFetch<CelestialBody[]>('/api/bodies', {
-  query: {
-    type: selectedBodyType,
-    hasImage: isImagesOnly,
-    sortBy: selectedSortBy,
-    sortOrder: selectedSortOrder
+const { data: planets, pending } = await useFetch<CelestialBody[]>(
+  '/api/bodies',
+  {
+    query: {
+      type: selectedBodyType,
+      hasImage: isImagesOnly,
+      sortBy: selectedSortBy,
+      sortOrder: selectedSortOrder
+    },
+    watch: [selectedBodyType, isImagesOnly, selectedSortBy, selectedSortOrder]
+  }
+)
+
+watch(
+  planets,
+  (val) => {
+    solarSystemStore.bodies = val || []
   },
-  watch: [selectedBodyType, isImagesOnly, selectedSortBy, selectedSortOrder]
-})
-
-watch(planets, (val) => {
-  solarSystemStore.bodies = val || []
-}, { immediate: true })
+  { immediate: true }
+)
 
 const bodyTypes: Ref<SelectItem[]> = ref(Object.values(BodyType))
 </script>
@@ -79,7 +93,7 @@ const bodyTypes: Ref<SelectItem[]> = ref(Object.values(BodyType))
     <UPageBody>
       <template v-if="pending">
         <div
-          class="w-full grid  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5"
+          class="w-full grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5"
         >
           <!-- TODO padding tout à droite -->
           <USkeleton
