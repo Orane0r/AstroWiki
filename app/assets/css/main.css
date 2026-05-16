@@ -3,7 +3,7 @@
 
 @theme static {
   --font-sans: "Roboto Mono", ui-monospace, monospace;
-  --font-display: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Spline Sans", ui-sans-serif, system-ui, sans-serif;
 
   --color-green-50: #EFFDF5;
   --color-green-100: #D9FBE8;

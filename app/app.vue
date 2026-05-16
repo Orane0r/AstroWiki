@@ -13,8 +13,8 @@ useHead({
   }
 })
 
-const title = 'Nuxt Starter Template'
-const description = 'A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours.'
+const title = 'Astro Wiki'
+const description = 'Explore celestial bodies.'
 
 useSeoMeta({
   title,
@@ -58,7 +58,13 @@ const items: Ref<NavigationMenuItem[]> = ref([
     <UHeader>
       <template #left>
         <NuxtLink to="/">
-          <AppLogo class="w-auto h-6 shrink-0" />
+          <!-- <AppLogo class="w-auto h-6 shrink-0" /> -->
+          <NuxtImg
+            src="/logo.png"
+            alt="Logo"
+            fit="contain"
+            class="w-auto h-14"
+          />
         </NuxtLink>
 
         <UNavigationMenu :items="items" />
