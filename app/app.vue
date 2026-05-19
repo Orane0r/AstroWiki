@@ -33,7 +33,7 @@ const items: Ref<NavigationMenuItem[]> = ref([
     children: [
       {
         label: 'Solar system',
-        to: '/wiki/'
+        to: '/'
       },
       {
         label: 'Stars',

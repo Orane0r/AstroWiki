@@ -1,79 +1,128 @@
 <script setup lang="ts">
+import type { SelectItem } from '@nuxt/ui'
+import { storeToRefs } from 'pinia'
+import { RANGES } from '~/utils/constants/options'
+import { SORTS } from '~~/shared/constants/options'
+import { BodyType } from '~~/shared/enums/body-type'
+import { Sorting } from '~~/shared/enums/sorting'
+
+const solarSystemStore = useSolarSystemStore()
+const {
+  bodies,
+  selectedRange,
+  selectedBodyType,
+  selectedSortBy,
+  selectedSortOrder,
+  isImagesOnly
+} = storeToRefs(solarSystemStore)
+
+const { data: planets, pending } = await useFetch<CelestialBody[]>(
+  '/api/bodies',
+  {
+    query: {
+      type: selectedBodyType,
+      hasImage: isImagesOnly,
+      sortBy: selectedSortBy,
+      sortOrder: selectedSortOrder
+    },
+    watch: [selectedBodyType, isImagesOnly, selectedSortBy, selectedSortOrder]
+  }
+)
+
+watch(
+  planets,
+  (val) => {
+    solarSystemStore.bodies = val || []
+  },
+  { immediate: true }
+)
+
+const bodyTypes: Ref<SelectItem[]> = ref(Object.values(BodyType))
 </script>
 
 <template>
-  <div>
-    <UPageHero
-      title="Nuxt Starter Template"
-      description="A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours."
-      :links="[{
-        label: 'Get started',
-        to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-        target: '_blank',
-        trailingIcon: 'i-lucide-arrow-right',
-        size: 'xl'
-      }, {
-        label: 'Use this template',
-        to: 'https://github.com/nuxt-ui-templates/starter',
-        target: '_blank',
-        icon: 'i-simple-icons-github',
-        size: 'xl',
-        color: 'neutral',
-        variant: 'subtle'
-      }]"
-    />
+  <UPage>
+    <template #left>
+      <UPageAside>
+        <div class="px-5 grid grid-cols-1 gap-4">
+          <div class="text-2xl">
+            Explore
+          </div>
+          <div class="text-lg">
+            Filter
+          </div>
 
-    <UPageSection
-      id="features"
-      title="Everything you need to build modern Nuxt apps"
-      description="Start with a solid foundation. This template includes all the essentials for building production-ready applications with Nuxt UI's powerful component system."
-      :features="[{
-        icon: 'i-lucide-rocket',
-        title: 'Production-ready from day one',
-        description: 'Pre-configured with TypeScript, ESLint, Tailwind CSS, and all the best practices. Focus on building features, not setting up tooling.'
-      }, {
-        icon: 'i-lucide-palette',
-        title: 'Beautiful by default',
-        description: 'Leveraging Nuxt UI\'s design system with automatic dark mode, consistent spacing, and polished components that look great out of the box.'
-      }, {
-        icon: 'i-lucide-zap',
-        title: 'Lightning fast',
-        description: 'Optimized for performance with SSR/SSG support, automatic code splitting, and edge-ready deployment. Your users will love the speed.'
-      }, {
-        icon: 'i-lucide-blocks',
-        title: '100+ components included',
-        description: 'Access Nuxt UI\'s comprehensive component library. From forms to navigation, everything is accessible, responsive, and customizable.'
-      }, {
-        icon: 'i-lucide-code-2',
-        title: 'Developer experience first',
-        description: 'Auto-imports, hot module replacement, and TypeScript support. Write less boilerplate and ship more features.'
-      }, {
-        icon: 'i-lucide-shield-check',
-        title: 'Built for scale',
-        description: 'Enterprise-ready architecture with proper error handling, SEO optimization, and security best practices built-in.'
-      }]"
-    />
+          <UFormField label="Range">
+            <USelect
+              v-model="selectedRange"
+              class="w-50"
+              :items="RANGES"
+            />
+          </UFormField>
+          <UFormField label="Type">
+            <USelect
+              v-model="selectedBodyType"
+              class="w-50"
+              :items="bodyTypes"
+            />
+          </UFormField>
+          <USwitch
+            v-model="isImagesOnly"
+            label="Images Only"
+          />
 
-    <UPageSection>
-      <UPageCTA
-        title="Ready to build your next Nuxt app?"
-        description="Join thousands of developers building with Nuxt and Nuxt UI. Get this template and start shipping today."
-        variant="subtle"
-        :links="[{
-          label: 'Start building',
-          to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-          target: '_blank',
-          trailingIcon: 'i-lucide-arrow-right',
-          color: 'neutral'
-        }, {
-          label: 'View on GitHub',
-          to: 'https://github.com/nuxt-ui-templates/starter',
-          target: '_blank',
-          icon: 'i-simple-icons-github',
-          color: 'neutral',
-          variant: 'outline'
-        }]"
-      />
-    </UPageSection>
-  </div>
+          <div class="text-lg">
+            Sort
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <URadioGroup
+              v-model="selectedSortBy"
+              :items="SORTS"
+            />
+
+            <URadioGroup
+              v-model="selectedSortOrder"
+              :items="Object.values(Sorting)"
+            />
+          </div>
+        </div>
+      </UPageAside>
+    </template>
+
+    <UPageBody>
+      <template v-if="pending">
+        <div
+          class="w-full grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5"
+        >
+          <!-- TODO padding tout à droite -->
+          <USkeleton
+            v-for="n in 20"
+            :key="n"
+            class="h-64"
+          />
+        </div>
+      </template>
+      <UPageColumns
+        v-else
+        class="column-1 md:columns-3 lg:columns-4 xl:columns-5 gap-5"
+      >
+        <UPageCard
+          v-for="(planet, index) in bodies"
+          :key="index"
+          variant="subtle"
+          :title="planet.name"
+        >
+          <template #footer>
+            <!-- TODO afficher l'image en gros dans un dialog quand on clique dessus -->
+            <NuxtImg
+              v-if="planet.imageUrl"
+              class="rounded-lg"
+              :src="planet.imageUrl"
+            />
+          </template>
+        </UPageCard>
+      </UPageColumns>
+    </UPageBody>
+  </UPage>
 </template>
